@@ -1,2 +1,23 @@
-/home/emahch/Lenguajes Formales/Proyecto 2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/FramePrincipal.java
-/home/emahch/Lenguajes Formales/Proyecto 2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/Test.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/ddl/Llave.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/ddl/Tabla.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/ddl/Drop.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/sintactico/AnalizadorSintactico.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/ddl/Modificador.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/FramePrincipal.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/tokens/TokenType.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/enums/Logico.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/ddl/Declaracion.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/frontend/LineNumber.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/enums/PalabraReservada.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/Lexico.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/tokens/TokenErrorSintaxis.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/enums/Booleano.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/sintactico/AnalizadorDDL.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/ddl/Alter.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/tokens/Token.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/ListSyntaxError.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/sintactico/AnalizadorDML.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/sintactico/AnalizadorHelper.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/sintactico/Pila.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/enums/DataType.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/ddl/AlterType.java
