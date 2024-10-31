@@ -72,5 +72,37 @@ public class Alter {
         this.llave = llave;
     }
     
+    public String generarDot(){
+        StringBuilder dot = new StringBuilder();
+        dot.append("digraph G {\n");
+        dot.append("    node [shape=plaintext];\n");
+
+        dot.append("AlterTable [label=<\n");
+        dot.append("<table border='0' cellborder='0' cellspacing='0'>\n");
+
+        // Título principal: ALTER TABLE <identificador>
+        dot.append("<tr><td colspan='2' bgcolor='#ffffff'>").append("ALTER TABLE ").append(getIdTabla()).append("</td></tr>\n");
+
+        // Segundo título en negrita y subrayado: <tipo> <objetivo>
+        dot.append("<tr><td><b><u>").append(getTipo()).append(" ").append(getObjetivo()).append("</u></b></td></tr>\n");
+
+        // Contenido de Llave o identificadorObjetivo con tipoDato
+        if (getLlave() != null) {
+            dot.append("<tr><td align='left'>")
+               .append(getLlave().getReference()).append(" : ")
+               .append(getLlave().getForeignKey()).append(" FK")
+               .append("</td></tr>\n");
+        } else {
+            dot.append("<tr><td align='left'>")
+               .append(getIdentificador()).append(": ")
+               .append(getTipoDato())
+               .append("</td></tr>\n");
+        }
+
+        dot.append("</table>\n");
+        dot.append("    >, shape=box, style=\"rounded,filled\", color=black, fillcolor=white];\n");
+        dot.append("}\n");
+        return dot.toString();
+    }
     
 }

@@ -482,7 +482,7 @@ public class AnalizadorDDL {
 
         if (helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
             llave.setIdentificador(token.getValor());
-            alter.setIdentificadorObjetivo(token.getValor());
+            alter.setIdentificador(token.getValor());
         } else {
             this.tokensError.addError(token, TokenType.IDENTIFICADOR);
             return Optional.empty();
@@ -526,7 +526,7 @@ public class AnalizadorDDL {
         }
         token = pila.popFirst();
         if (helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
-            alter.setIdentificadorObjetivo(token.getValor());
+            alter.setTipoDato(token.getValor() + " UNIQUE");
         } else {
             this.tokensError.addError(token, TokenType.IDENTIFICADOR);
             return Optional.empty();
@@ -584,7 +584,7 @@ public class AnalizadorDDL {
             this.tokensError.addError(token, TokenType.IDENTIFICADOR);
             return Optional.empty();
         }
-
+        alter.setTipoDato("drop");
         return Optional.of(alter);
     }
 
@@ -644,4 +644,22 @@ public class AnalizadorDDL {
             System.out.println(tabla.print());
         }
     }
+
+    public List<String> getDBCreadas() {
+        return DBCreadas;
+    }
+
+    public List<Tabla> getTablasCreadas() {
+        return tablasCreadas;
+    }
+
+    public List<Alter> getTablasModificadas() {
+        return tablasModificadas;
+    }
+
+    public List<Drop> getTablasBorradas() {
+        return tablasBorradas;
+    }
+    
+    
 }

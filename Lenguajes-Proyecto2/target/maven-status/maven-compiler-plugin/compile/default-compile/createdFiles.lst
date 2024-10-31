@@ -1,5 +1,6 @@
 josecarlos/lenguajes/proyecto2/sintactico/Pila.class
 josecarlos/lenguajes/proyecto2/ddl/Declaracion.class
+josecarlos/lenguajes/proyecto2/frontend/FrameReportes.class
 josecarlos/lenguajes/proyecto2/FramePrincipal$6.class
 josecarlos/lenguajes/proyecto2/FramePrincipal$4.class
 josecarlos/lenguajes/proyecto2/enums/Logico.class
@@ -10,6 +11,7 @@ josecarlos/lenguajes/proyecto2/frontend/ExportImportFile.class
 josecarlos/lenguajes/proyecto2/frontend/LineNumber.class
 josecarlos/lenguajes/proyecto2/sintactico/AnalizadorDDL.class
 josecarlos/lenguajes/proyecto2/tokens/TokenType.class
+josecarlos/lenguajes/proyecto2/FramePrincipal$9.class
 josecarlos/lenguajes/proyecto2/ddl/AlterType.class
 josecarlos/lenguajes/proyecto2/FramePrincipal$1.class
 josecarlos/lenguajes/proyecto2/sintactico/AnalizadorDML.class
@@ -20,7 +22,9 @@ josecarlos/lenguajes/proyecto2/ddl/Alter.class
 josecarlos/lenguajes/proyecto2/tokens/TokenErrorSintaxis.class
 josecarlos/lenguajes/proyecto2/enums/PalabraReservada.class
 josecarlos/lenguajes/proyecto2/Lexico.class
+josecarlos/lenguajes/proyecto2/FramePrincipal$7.class
 josecarlos/lenguajes/proyecto2/FramePrincipal$3.class
+josecarlos/lenguajes/proyecto2/FramePrincipal$8.class
 josecarlos/lenguajes/proyecto2/FramePrincipal$2.class
 josecarlos/lenguajes/proyecto2/ddl/Tabla.class
 josecarlos/lenguajes/proyecto2/enums/DataType.class

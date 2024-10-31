@@ -150,7 +150,8 @@ public class AnalizadorDML {
         Token token = pila.popFirst();
         if (helper.analizarTipo(token, TokenType.ENTERO) || helper.analizarTipo(token, TokenType.DECIMAL)
                 || helper.analizarTipo(token, TokenType.FECHA) || helper.analizarTipo(token, TokenType.CADENA)
-                || helper.analizarValor(token, Booleano.TRUE.name()) || helper.analizarValor(token, Booleano.FALSE.name())) {
+                || helper.analizarValor(token, Booleano.TRUE.name()) || helper.analizarValor(token, Booleano.FALSE.name())
+                || helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
             Optional<String> posibleOperador = getOperador(pila);
             if (posibleOperador.isEmpty()) {
                 return Optional.of(token.getValor());
@@ -297,22 +298,35 @@ public class AnalizadorDML {
         Token token = pila.getFirst();
         if (helper.analizarValor(token, PalabraReservada.JOIN.name())) {
             pila.popFirst();
-            return analizarJoin(pila);
+            if (!analizarJoin(pila)) {
+                return false;
+            }
         } else if (helper.analizarValor(token, PalabraReservada.WHERE.name())) {
             pila.popFirst();
-            return analizarWhere(pila);
+            if (!analizarWhere(pila)) {
+                return false;
+            }
         } else if (helper.analizarValor(token, PalabraReservada.GROUP.name())) {
             pila.popFirst();
-
+            if (!analizarGroup(pila)) {
+                return false;
+            }
         } else if (helper.analizarValor(token, PalabraReservada.ORDER.name())) {
             pila.popFirst();
-
+            if (!analizarOrder(pila)) {
+                return false;
+            }
         } else if (helper.analizarValor(token, PalabraReservada.LIMIT.name())) {
             pila.popFirst();
-
+            token = pila.popFirst();
+            if (!helper.analizarTipo(token, TokenType.ENTERO)) {
+                this.tokensError.addError(token, TokenType.ENTERO);
+                return false;
+            }
         } else {
             return false;
         }
+        analizarSentencia(pila);
         return true;
     }
 
@@ -370,7 +384,14 @@ public class AnalizadorDML {
     }
 
     private boolean analizarWhere(Pila pila) {
-        Token token = pila.popFirst();
+        boolean inParentesis = false;
+        Token token = pila.getFirst();
+        if (helper.analizarValor(token, "(")) {
+            pila.popFirst();
+            inParentesis = true;
+        }
+
+        token = pila.popFirst();
         if (helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
             token = pila.getFirst();
             if (helper.analizarValor(token, ".")) {
@@ -409,6 +430,17 @@ public class AnalizadorDML {
             return false;
         }
 
+        if (inParentesis) {
+            token = pila.getFirst();
+            if (helper.analizarValor(token, ")")) {
+                pila.popFirst();
+            } else {
+                this.tokensError.addError(token, ")");
+                return false;
+            }
+
+        }
+
         token = pila.getFirst();
         if (helper.analizarValor(token, Logico.AND.name())) {
             pila.popFirst();
@@ -418,6 +450,127 @@ public class AnalizadorDML {
         }
     }
 
+    private boolean analizarGroup(Pila pila) {
+        Token token = pila.popFirst();
+        if (!helper.analizarValor(token, PalabraReservada.BY.name())) {
+            this.tokensError.addError(token, PalabraReservada.BY.name());
+            return false;
+        }
+        token = pila.popFirst();
+        if (helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
+            token = pila.getFirst();
+            if (helper.analizarValor(token, ".")) {
+                pila.popFirst();
+                token = pila.popFirst();
+                if (!helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
+                    this.tokensError.addError(token, TokenType.IDENTIFICADOR);
+                    return false;
+                }
+            }
+        } else {
+            this.tokensError.addError(token, TokenType.IDENTIFICADOR);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean analizarOrder(Pila pila) {
+        if (!analizarGroup(pila)) {
+            return false;
+        }
+        Token token = pila.popFirst();
+        if (!helper.analizarValor(token, new String[]{PalabraReservada.DESC.name(), PalabraReservada.ASC.name()})) {
+            this.tokensError.addError(token, new String[]{PalabraReservada.DESC.name(), PalabraReservada.ASC.name()});
+            return false;
+        }
+        return true;
+    }
+
+    // ----------------------------- UPDATE --------------------------------------
+    public void analizarUpdate(Pila pila) {
+        pila.popFirst();
+        Token token = pila.popFirst();
+        if (!helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
+            this.tokensError.addError(token, TokenType.IDENTIFICADOR);
+            return;
+        }
+        token = pila.popFirst();
+        if (!helper.analizarValor(token, PalabraReservada.SET.name())) {
+            this.tokensError.addError(token, PalabraReservada.SET.name());
+            return;
+        }
+
+        analizarSet(pila);
+
+        token = pila.popFirst();
+        if (helper.analizarValor(token, PalabraReservada.WHERE.name())) {
+            if (!analizarWhere(pila)) {
+                return;
+            }
+            token = pila.popFirst();
+        }
+        
+        if (!helper.analizarFinBloque(token)) {
+            this.tokensError.addError(token, ";");
+            return;
+        }
+        this.operaciones.sumUpdate();
+    }
+
+    private boolean analizarSet(Pila pila) {
+        Token token = pila.popFirst();
+        if (!helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
+            this.tokensError.addError(token, TokenType.IDENTIFICADOR);
+            return false;
+        }
+        token = pila.popFirst();
+        if (!helper.analizarValor(token, "=")) {
+            this.tokensError.addError(token, "=");
+            return false;
+        }
+        if (getDato(pila).isEmpty()) {
+            this.tokensError.addError(token, "[DATO]");
+            return false;
+        }
+        token = pila.getFirst();
+        if (helper.analizarValor(token, ",")) {
+            pila.popFirst();
+            return analizarSet(pila);
+        }
+        return true;
+    }
+    
+    // ----------------------------- DELETE ---------------------------------------
+    public void analizarDelete(Pila pila) {
+        pila.popFirst();
+        Token token = pila.popFirst();
+        
+        if (!helper.analizarValor(token, PalabraReservada.FROM.name())) {
+            this.tokensError.addError(token, PalabraReservada.FROM.name());
+            return;
+        }
+        
+        token = pila.popFirst();
+        if (!helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
+            this.tokensError.addError(token, TokenType.IDENTIFICADOR);
+            return;
+        }
+        
+        token = pila.popFirst();
+        if (helper.analizarValor(token, PalabraReservada.WHERE.name())) {
+            if (!analizarWhere(pila)) {
+                return;
+            }
+            token = pila.popFirst();
+        }
+        
+        if (!helper.analizarFinBloque(token)) {
+            this.tokensError.addError(token, ";");
+            return;
+        }
+        this.operaciones.sumDelete();
+    }
+    
     public void printInserts() {
         if (inserts.isEmpty()) {
             return;

@@ -48,6 +48,16 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Generar Gr&#xe1;fico"/>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="itemTablas">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Tablas"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemTablasActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="menuReportes">
           <Properties>
@@ -63,11 +73,17 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="L&#xe9;xicos"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="erroresLexicosActionPerformed"/>
+                  </Events>
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="erroresSint&#xe1;cticos">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Sint&#xe1;cticos"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="erroresSint&#xe1;cticosActionPerformed"/>
+                  </Events>
                 </MenuItem>
               </SubComponents>
             </Menu>

@@ -10,6 +10,7 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import josecarlos.lenguajes.proyecto2.frontend.ExportImportFile;
+import josecarlos.lenguajes.proyecto2.frontend.FrameReportes;
 import josecarlos.lenguajes.proyecto2.frontend.LineNumber;
 import josecarlos.lenguajes.proyecto2.sintactico.AnalizadorSintactico;
 import josecarlos.lenguajes.proyecto2.tokens.Token;
@@ -21,6 +22,8 @@ import josecarlos.lenguajes.proyecto2.tokens.Token;
 public class FramePrincipal extends javax.swing.JFrame {
 
     private File selectedFile;
+    private AnalizadorSintactico analizadorSyntaxis;
+    private List<Token> tokensErrorLexico;
 
     /**
      * Creates new form FramePrincipal
@@ -51,6 +54,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         guardarArchivo = new javax.swing.JMenuItem();
         guardarArchivoComo = new javax.swing.JMenuItem();
         menuGrafico = new javax.swing.JMenu();
+        itemTablas = new javax.swing.JMenuItem();
         menuReportes = new javax.swing.JMenu();
         menuErrores = new javax.swing.JMenu();
         erroresLexicos = new javax.swing.JMenuItem();
@@ -139,6 +143,15 @@ public class FramePrincipal extends javax.swing.JFrame {
         menuBar.add(menuArchivo);
 
         menuGrafico.setText("Generar Gráfico");
+
+        itemTablas.setText("Tablas");
+        itemTablas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemTablasActionPerformed(evt);
+            }
+        });
+        menuGrafico.add(itemTablas);
+
         menuBar.add(menuGrafico);
 
         menuReportes.setText("Reportes");
@@ -146,9 +159,19 @@ public class FramePrincipal extends javax.swing.JFrame {
         menuErrores.setText("Errores");
 
         erroresLexicos.setText("Léxicos");
+        erroresLexicos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                erroresLexicosActionPerformed(evt);
+            }
+        });
         menuErrores.add(erroresLexicos);
 
         erroresSintácticos.setText("Sintácticos");
+        erroresSintácticos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                erroresSintácticosActionPerformed(evt);
+            }
+        });
         menuErrores.add(erroresSintácticos);
 
         menuReportes.add(menuErrores);
@@ -200,8 +223,9 @@ public class FramePrincipal extends javax.swing.JFrame {
         if (listaVista.isEmpty()) {
             return;
         }
-        AnalizadorSintactico analizadorSintaxis = new AnalizadorSintactico(lista);
-        analizadorSintaxis.analizar();
+        this.tokensErrorLexico = listaErrores;
+        analizadorSyntaxis = new AnalizadorSintactico(lista);
+        analizadorSyntaxis.analizar();
         updateText(listaVista);
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
@@ -247,6 +271,33 @@ public class FramePrincipal extends javax.swing.JFrame {
             txtPane.setText(datos);
         }
     }//GEN-LAST:event_cargarArchivoActionPerformed
+
+    private void itemTablasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemTablasActionPerformed
+        if (analizadorSyntaxis == null) {
+            return;
+        }
+        analizadorSyntaxis.printTables();
+    }//GEN-LAST:event_itemTablasActionPerformed
+
+    private void erroresLexicosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_erroresLexicosActionPerformed
+        if (tokensErrorLexico == null || tokensErrorLexico.isEmpty()) {
+            return;
+        }
+        FrameReportes reportesLexicos = new FrameReportes("Errores Léxicos");
+        reportesLexicos.generarTabla(tokensErrorLexico);
+        reportesLexicos.setVisible(true);
+        reportesLexicos.setLocationRelativeTo(null);
+    }//GEN-LAST:event_erroresLexicosActionPerformed
+
+    private void erroresSintácticosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_erroresSintácticosActionPerformed
+         if (analizadorSyntaxis.getTokensError().isEmpty()) {
+            return;
+        }
+        FrameReportes reportesLexicos = new FrameReportes("Errores Sintácticos");
+        reportesLexicos.generarTabla(analizadorSyntaxis.getTokensError());
+        reportesLexicos.setVisible(true);
+        reportesLexicos.setLocationRelativeTo(null);
+    }//GEN-LAST:event_erroresSintácticosActionPerformed
 
     private void updateText(List<Token> listaVista) {
         StyledDocument doc = txtPane.getStyledDocument();
@@ -297,6 +348,10 @@ public class FramePrincipal extends javax.swing.JFrame {
             }
         });
     }
+    
+    private void showReportTokens(){
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAnalizar;
@@ -305,6 +360,7 @@ public class FramePrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem erroresSintácticos;
     private javax.swing.JMenuItem guardarArchivo;
     private javax.swing.JMenuItem guardarArchivoComo;
+    private javax.swing.JMenuItem itemTablas;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblPosicion;
     private javax.swing.JMenu menuArchivo;
