@@ -1,8 +1,7 @@
 package josecarlos.lenguajes.proyecto2.sintactico;
 
-import java.util.ArrayList;
 import java.util.List;
-import josecarlos.lenguajes.proyecto2.ListSyntaxError;
+import josecarlos.lenguajes.proyecto2.tokens.ListSyntaxError;
 import josecarlos.lenguajes.proyecto2.enums.PalabraReservada;
 import josecarlos.lenguajes.proyecto2.tokens.Token;
 import josecarlos.lenguajes.proyecto2.tokens.TokenErrorSintaxis;

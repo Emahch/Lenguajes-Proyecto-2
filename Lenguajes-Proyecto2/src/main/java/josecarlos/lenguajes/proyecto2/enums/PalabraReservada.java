@@ -21,7 +21,7 @@ public enum PalabraReservada {
     DROP,
     CONSTRAINT,
     IF,
-    EXIST,
+    EXISTS,
     CASCADE,
     ON,
     DELETE,

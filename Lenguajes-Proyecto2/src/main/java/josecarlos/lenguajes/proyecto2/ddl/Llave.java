@@ -4,7 +4,7 @@ package josecarlos.lenguajes.proyecto2.ddl;
  *
  * @author emahch
  */
-public class Llave implements Modificador{
+public class Llave{
     private String identificador;
     private String foreignKey;
     private String reference;

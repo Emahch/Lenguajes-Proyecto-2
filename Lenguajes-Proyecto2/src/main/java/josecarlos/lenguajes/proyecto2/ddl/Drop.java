@@ -6,4 +6,12 @@ package josecarlos.lenguajes.proyecto2.ddl;
  */
 public class Drop {
     private String idTabla;
+
+    public String getIdTabla() {
+        return idTabla;
+    }
+
+    public void setIdTabla(String idTabla) {
+        this.idTabla = idTabla;
+    }
 }

@@ -54,7 +54,7 @@ N = [0-9]
 LMINS = [a-z]
 IDENTIFICADOR = {LMINS}({LMINS}|_|{N})*
 FECHA = '{N}{4}-{N}{2}-{N}{2}'
-RESERVED = (CREATE | DATABASE | TABLE | KEY | NULL | PRIMARY | UNIQUE | FOREIGN | REFERENCES | ALTER | ADD | COLUMN | TYPE | DROP | CONSTRAINT | IF | EXIST | CASCADE | ON | DELETE | SET | UPDATE | INSERT | INTO | VALUES | SELECT | FROM | WHERE | AS | GROUP | ORDER | BY | ASC | DESC | LIMIT | JOIN)
+RESERVED = (CREATE | DATABASE | TABLE | KEY | NULL | PRIMARY | UNIQUE | FOREIGN | REFERENCES | ALTER | ADD | COLUMN | TYPE | DROP | CONSTRAINT | IF | EXISTS | CASCADE | ON | DELETE | SET | UPDATE | INSERT | INTO | VALUES | SELECT | FROM | WHERE | AS | GROUP | ORDER | BY | ASC | DESC | LIMIT | JOIN)
 DATO = (INTEGER | BIGINT | VARCHAR | DECIMAL | NUMERIC | DATE | TEXT | BOOLEAN | SERIAL)
 BOOLEANO = (TRUE | FALSE)
 AGREGACION = (SUM | AVG | COUNT | MAX | MIN)
@@ -68,7 +68,7 @@ ESPACIOS = [\b\t\r\n ]  //Todos los espacios en blanco
 %%
 {COMENTARIOS}           {addList(new Token(TokenType.COMENTARIO, yytext(), yyline, yycolumn));}
 {RESERVED}              {addList(new Token(TokenType.PALABRA_RESERVADA, yytext(), yyline, yycolumn));}
-{DATO}                  {addList(new Token(TokenType.DATO, yytext(), yyline, yycolumn));}
+{DATO}                  {addList(new Token(TokenType.TIPO_DATO, yytext(), yyline, yycolumn));}
 {BOOLEANO}              {addList(new Token(TokenType.BOOLEANO, yytext(), yyline, yycolumn));}
 {AGREGACION}            {addList(new Token(TokenType.AGREGACION, yytext(), yyline, yycolumn));}
 {LOGICOS}               {addList(new Token(TokenType.LOGICO, yytext(), yyline, yycolumn));}

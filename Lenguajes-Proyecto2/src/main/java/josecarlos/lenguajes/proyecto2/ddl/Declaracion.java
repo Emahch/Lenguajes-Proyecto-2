@@ -1,6 +1,5 @@
 package josecarlos.lenguajes.proyecto2.ddl;
 
-import java.util.Optional;
 import josecarlos.lenguajes.proyecto2.enums.Logico;
 import josecarlos.lenguajes.proyecto2.enums.PalabraReservada;
 
@@ -8,7 +7,7 @@ import josecarlos.lenguajes.proyecto2.enums.PalabraReservada;
  *
  * @author emahch
  */
-public class Declaracion implements Modificador{
+public class Declaracion {
     
     public static final String[] ACEPTED = {PalabraReservada.PRIMARY.name(), Logico.NOT.name(), PalabraReservada.UNIQUE.name()};
     

@@ -3,10 +3,12 @@ package josecarlos.lenguajes.proyecto2.sintactico;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import josecarlos.lenguajes.proyecto2.ListSyntaxError;
+import josecarlos.lenguajes.proyecto2.tokens.ListSyntaxError;
 import josecarlos.lenguajes.proyecto2.ddl.Declaracion;
 import josecarlos.lenguajes.proyecto2.ddl.Llave;
 import josecarlos.lenguajes.proyecto2.ddl.Alter;
+import josecarlos.lenguajes.proyecto2.ddl.AlterType;
+import josecarlos.lenguajes.proyecto2.ddl.Drop;
 import josecarlos.lenguajes.proyecto2.ddl.Tabla;
 import josecarlos.lenguajes.proyecto2.enums.DataType;
 import josecarlos.lenguajes.proyecto2.enums.PalabraReservada;
@@ -24,7 +26,7 @@ public class AnalizadorDDL {
     private List<String> DBCreadas;
     private List<Tabla> tablasCreadas;
     private List<Alter> tablasModificadas;
-    private List<Tabla> tablasBorradas;
+    private List<Drop> tablasBorradas;
     private ListSyntaxError tokensError;
     private AnalizadorHelper helper;
 
@@ -37,36 +39,8 @@ public class AnalizadorDDL {
         this.helper = new AnalizadorHelper();
     }
 
+    /* -------------------------------------- CREATE --------------------------------*/
     public void analizarCreate(Pila pila) {
-        pila.popFirst();
-        Token token = pila.popFirst();
-
-        if (token.getTipo().equals(TokenType.PALABRA_RESERVADA) && token.getValor().equals(PalabraReservada.DATABASE.name())) {
-            analizarCreacionDB(pila);
-        } else if (token.getTipo().equals(TokenType.PALABRA_RESERVADA) && token.getValor().equals(PalabraReservada.TABLE.name())) {
-            analizarCreacionTabla(pila);
-        } else {
-            this.tokensError.addError(token, ACEPTED);
-        }
-    }
-
-    public void analizarAlter(Pila pila) {
-        pila.popFirst();
-        Token token = pila.popFirst();
-        if (!helper.analizarValor(token, PalabraReservada.TABLE.name())) {
-            this.tokensError.addError(token, PalabraReservada.TABLE.name());
-            return;
-        }
-        token = pila.popFirst();
-        if (helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
-            
-        } else {
-            this.tokensError.addError(token, TokenType.IDENTIFICADOR);
-            return;
-        }
-    }
-
-    public void analizarDrop(Pila pila) {
         pila.popFirst();
         Token token = pila.popFirst();
 
@@ -143,7 +117,27 @@ public class AnalizadorDDL {
             }
         } while (enDeclaraciones);
 
-        Optional<Llave> posibleLlave = analizarLlave(pila);
+        Llave llave = new Llave();
+        token = pila.popFirst();
+        if (!helper.analizarValor(token, PalabraReservada.CONSTRAINT.name())) {
+            this.tokensError.addError(token, PalabraReservada.CONSTRAINT.name());
+            return;
+        }
+
+        token = pila.popFirst();
+        if (helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
+            llave.setIdentificador(token.getValor());
+        } else {
+            this.tokensError.addError(token, TokenType.IDENTIFICADOR);
+            return;
+        }
+
+        token = pila.popFirst();
+        if (!helper.analizarValor(token, PalabraReservada.FOREIGN.name())) {
+            this.tokensError.addError(token, PalabraReservada.FOREIGN.name());
+            return;
+        }
+        Optional<Llave> posibleLlave = analizarLlave(pila, llave);
         if (posibleLlave.isPresent()) {
             tabla.setLlave(posibleLlave.get());
         } else {
@@ -163,29 +157,8 @@ public class AnalizadorDDL {
         }
     }
 
-    private Optional<Llave> analizarLlave(Pila pila) {
-        Llave llave = new Llave();
+    private Optional<Llave> analizarLlave(Pila pila, Llave llave) {
         Token token = pila.popFirst();
-        if (!helper.analizarValor(token, PalabraReservada.CONSTRAINT.name())) {
-            this.tokensError.addError(token, PalabraReservada.CONSTRAINT.name());
-            return Optional.empty();
-        }
-
-        token = pila.popFirst();
-        if (helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
-            llave.setIdentificador(token.getValor());
-        } else {
-            this.tokensError.addError(token, TokenType.IDENTIFICADOR);
-            return Optional.empty();
-        }
-
-        token = pila.popFirst();
-        if (!helper.analizarValor(token, PalabraReservada.FOREIGN.name())) {
-            this.tokensError.addError(token, PalabraReservada.FOREIGN.name());
-            return Optional.empty();
-        }
-
-        token = pila.popFirst();
         if (!helper.analizarValor(token, PalabraReservada.KEY.name())) {
             this.tokensError.addError(token, PalabraReservada.KEY.name());
             return Optional.empty();
@@ -402,6 +375,250 @@ public class AnalizadorDDL {
         }
         this.tokensError.addError(token, TokenType.TIPO_DATO);
         return Optional.empty();
+    }
+
+    /* -------------------------------------- ALTER --------------------------------*/
+    public void analizarAlter(Pila pila) {
+        Alter alter = new Alter();
+        pila.popFirst();
+        Token token = pila.popFirst();
+        if (!helper.analizarValor(token, PalabraReservada.TABLE.name())) {
+            this.tokensError.addError(token, PalabraReservada.TABLE.name());
+            return;
+        }
+        token = pila.popFirst();
+        if (helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
+            alter.setIdTabla(token.getValor());
+        } else {
+            this.tokensError.addError(token, TokenType.IDENTIFICADOR);
+            return;
+        }
+
+        Optional<Alter> posibleAlter;
+        token = pila.popFirst();
+        if (helper.analizarValor(token, AlterType.array)) {
+            switch (token.getValor()) {
+                case "ADD" -> {
+                    alter.setTipo(AlterType.ADD);
+                    posibleAlter = analizarAlterAdd(pila, alter);
+                }
+                case "ALTER" -> {
+                    alter.setTipo(AlterType.ALTER);
+                    posibleAlter = analizarAlterAlter(pila, alter);
+                }
+                case "DROP" -> {
+                    alter.setTipo(AlterType.DROP);
+                    posibleAlter = analizarAlterDrop(pila, alter);
+                }
+                default -> {
+                    return;
+                }
+            }
+            if (posibleAlter.isPresent()) {
+                alter = posibleAlter.get();
+            } else {
+                return;
+            }
+        } else {
+            this.tokensError.addError(token, AlterType.array);
+            return;
+        }
+
+        token = pila.popFirst();
+        if (helper.analizarFinBloque(token)) {
+            this.tablasModificadas.add(alter);
+        } else {
+            this.tokensError.addError(token, ";");
+        }
+    }
+
+    private Optional<Alter> analizarAlterAdd(Pila pila, Alter alter) {
+        String[] valoresPosibles = {PalabraReservada.COLUMN.name(), PalabraReservada.CONSTRAINT.name()};
+
+        Optional<Alter> posibleAlter;
+        Token token = pila.popFirst();
+        if (helper.analizarValor(token, valoresPosibles)) {
+            alter.setObjetivo(token.getValor());
+            if (helper.analizarValor(token, PalabraReservada.COLUMN.name())) {
+                posibleAlter = analizarAddColumn(pila, alter);
+            } else if (helper.analizarValor(token, PalabraReservada.CONSTRAINT.name())) {
+                posibleAlter = analizarAddConstraint(pila, alter);
+            } else {
+                return Optional.empty();
+            }
+        } else {
+            this.tokensError.addError(token, valoresPosibles);
+            return Optional.empty();
+        }
+        return posibleAlter;
+    }
+
+    private Optional<Alter> analizarAddColumn(Pila pila, Alter alter) {
+        Token token = pila.popFirst();
+        if (helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
+            alter.setIdentificador(token.getValor());
+        } else {
+            this.tokensError.addError(token, TokenType.IDENTIFICADOR);
+            return Optional.empty();
+        }
+
+        Optional<String> posibleDato = analizarDato(pila);
+        if (posibleDato.isEmpty()) {
+            return Optional.empty();
+        }
+        alter.setTipoDato(posibleDato.get());
+        return Optional.of(alter);
+    }
+
+    private Optional<Alter> analizarAddConstraint(Pila pila, Alter alter) {
+        Llave llave = new Llave();
+        Token token = pila.popFirst();
+
+        if (helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
+            llave.setIdentificador(token.getValor());
+            alter.setIdentificadorObjetivo(token.getValor());
+        } else {
+            this.tokensError.addError(token, TokenType.IDENTIFICADOR);
+            return Optional.empty();
+        }
+
+        String[] valoresPosibles = {PalabraReservada.UNIQUE.name(), PalabraReservada.FOREIGN.name()};
+        token = pila.popFirst();
+        if (helper.analizarValor(token, valoresPosibles)) {
+            if (helper.analizarValor(token, PalabraReservada.UNIQUE.name())) {
+                Optional<Alter> posibleAlter = analizarConstraintUnique(pila, alter);
+                if (posibleAlter.isPresent()) {
+                    alter = posibleAlter.get();
+                } else {
+                    return Optional.empty();
+                }
+            } else {
+                Optional<Llave> posibleLlave = analizarLlave(pila, llave);
+                if (posibleLlave.isPresent()) {
+                    alter.setIdentificadorObjetivo(null);
+                    alter.setLlave(posibleLlave.get());
+                } else {
+                    return Optional.empty();
+                }
+            }
+        } else {
+            Optional<String> posibleDato = analizarDato(pila);
+            if (posibleDato.isEmpty()) {
+                return Optional.empty();
+            }
+            alter.setTipoDato(posibleDato.get());
+        }
+        return Optional.of(alter);
+
+    }
+
+    private Optional<Alter> analizarConstraintUnique(Pila pila, Alter alter) {
+        Token token = pila.popFirst();
+        if (!helper.analizarValor(token, "(")) {
+            this.tokensError.addError(token, "(");
+            return Optional.empty();
+        }
+        token = pila.popFirst();
+        if (helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
+            alter.setIdentificadorObjetivo(token.getValor());
+        } else {
+            this.tokensError.addError(token, TokenType.IDENTIFICADOR);
+            return Optional.empty();
+        }
+        token = pila.popFirst();
+        if (!helper.analizarValor(token, ")")) {
+            this.tokensError.addError(token, ")");
+            return Optional.empty();
+        }
+        return Optional.of(alter);
+    }
+
+    private Optional<Alter> analizarAlterAlter(Pila pila, Alter alter) {
+        Token token = pila.popFirst();
+        if (helper.analizarValor(token, PalabraReservada.COLUMN.name())) {
+            alter.setObjetivo(token.getValor());
+        } else {
+            this.tokensError.addError(token, PalabraReservada.COLUMN.name());
+            return Optional.empty();
+        }
+        token = pila.popFirst();
+        if (helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
+            alter.setIdentificador(token.getValor());
+        } else {
+            this.tokensError.addError(token, TokenType.IDENTIFICADOR);
+            return Optional.empty();
+        }
+
+        token = pila.popFirst();
+        if (!helper.analizarValor(token, PalabraReservada.TYPE.name())) {
+            this.tokensError.addError(token, PalabraReservada.TYPE.name());
+            return Optional.empty();
+        }
+
+        Optional<String> posibleDato = analizarDato(pila);
+        if (posibleDato.isEmpty()) {
+            return Optional.empty();
+        }
+        alter.setTipoDato(posibleDato.get());
+        return Optional.of(alter);
+    }
+
+    private Optional<Alter> analizarAlterDrop(Pila pila, Alter alter) {
+        Token token = pila.popFirst();
+        if (helper.analizarValor(token, PalabraReservada.COLUMN.name())) {
+            alter.setObjetivo(token.getValor());
+        } else {
+            this.tokensError.addError(token, PalabraReservada.COLUMN.name());
+            return Optional.empty();
+        }
+        token = pila.popFirst();
+        if (helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
+            alter.setIdentificador(token.getValor());
+        } else {
+            this.tokensError.addError(token, TokenType.IDENTIFICADOR);
+            return Optional.empty();
+        }
+
+        return Optional.of(alter);
+    }
+
+    /* -------------------------------------- DROP --------------------------------*/
+    public void analizarDrop(Pila pila) {
+        Drop drop = new Drop();
+        pila.popFirst();
+        Token token = pila.popFirst();
+        if (!helper.analizarValor(token, PalabraReservada.TABLE.name())) {
+            this.tokensError.addError(token, PalabraReservada.TABLE.name());
+            return;
+        }
+        token = pila.popFirst();
+        if (!helper.analizarValor(token, PalabraReservada.IF.name())) {
+            this.tokensError.addError(token, PalabraReservada.IF.name());
+            return;
+        }
+        token = pila.popFirst();
+        if (!helper.analizarValor(token, PalabraReservada.EXISTS.name())) {
+            this.tokensError.addError(token, PalabraReservada.EXISTS.name());
+            return;
+        }
+        token = pila.popFirst();
+        if (helper.analizarTipo(token, TokenType.IDENTIFICADOR)) {
+            drop.setIdTabla(token.getValor());
+        } else {
+            this.tokensError.addError(token, TokenType.IDENTIFICADOR);
+            return;
+        }
+        token = pila.popFirst();
+        if (!helper.analizarValor(token, PalabraReservada.CASCADE.name())) {
+            this.tokensError.addError(token, PalabraReservada.CASCADE.name());
+            return;
+        }
+        token = pila.popFirst();
+        if (helper.analizarFinBloque(token)) {
+            this.tablasBorradas.add(drop);
+        } else {
+            this.tokensError.addError(token, ";");
+        }
     }
 
     public void printDB() {

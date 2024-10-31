@@ -1,8 +1,8 @@
 /home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/ddl/Llave.java
 /home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/ddl/Tabla.java
+/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/frontend/ExportImportFile.java
 /home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/ddl/Drop.java
 /home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/sintactico/AnalizadorSintactico.java
-/home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/ddl/Modificador.java
 /home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/FramePrincipal.java
 /home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/tokens/TokenType.java
 /home/emahch/Lenguajes Formales/Lenguajes-Proyecto-2/Lenguajes-Proyecto2/src/main/java/josecarlos/lenguajes/proyecto2/enums/Logico.java

@@ -1,7 +1,6 @@
 package josecarlos.lenguajes.proyecto2;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -10,6 +9,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import josecarlos.lenguajes.proyecto2.frontend.ExportImportFile;
 import josecarlos.lenguajes.proyecto2.frontend.LineNumber;
 import josecarlos.lenguajes.proyecto2.sintactico.AnalizadorSintactico;
 import josecarlos.lenguajes.proyecto2.tokens.Token;
@@ -19,6 +19,8 @@ import josecarlos.lenguajes.proyecto2.tokens.Token;
  * @author emahch
  */
 public class FramePrincipal extends javax.swing.JFrame {
+
+    private File selectedFile;
 
     /**
      * Creates new form FramePrincipal
@@ -109,13 +111,29 @@ public class FramePrincipal extends javax.swing.JFrame {
 
         cargarArchivo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         cargarArchivo.setText("Cargar");
+        cargarArchivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cargarArchivoActionPerformed(evt);
+            }
+        });
         menuArchivo.add(cargarArchivo);
 
         guardarArchivo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         guardarArchivo.setText("Guardar");
+        guardarArchivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guardarArchivoActionPerformed(evt);
+            }
+        });
         menuArchivo.add(guardarArchivo);
 
+        guardarArchivoComo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
         guardarArchivoComo.setText("Guardar como");
+        guardarArchivoComo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guardarArchivoComoActionPerformed(evt);
+            }
+        });
         menuArchivo.add(guardarArchivoComo);
 
         menuBar.add(menuArchivo);
@@ -199,6 +217,35 @@ public class FramePrincipal extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_txtPaneCaretUpdate
+
+    private void guardarArchivoComoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarArchivoComoActionPerformed
+        ExportImportFile exportFile = new ExportImportFile();
+        boolean isSelected = exportFile.selectPath("querySQL.txt");
+        if (isSelected) {
+            this.selectedFile = exportFile.getArchivoSeleccionado();
+            exportFile.writeFile(txtPane.getText());
+        }
+    }//GEN-LAST:event_guardarArchivoComoActionPerformed
+
+    private void guardarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarArchivoActionPerformed
+        ExportImportFile exportFile = new ExportImportFile();
+        if (selectedFile == null) {
+            guardarArchivoComoActionPerformed(evt);
+            return;
+        } else {
+            exportFile.setArchivoSeleccionado(selectedFile);
+        }
+        exportFile.writeFile(txtPane.getText());
+    }//GEN-LAST:event_guardarArchivoActionPerformed
+
+    private void cargarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarArchivoActionPerformed
+        ExportImportFile importFile = new ExportImportFile();
+        boolean isSelected = importFile.openFile();
+        if (isSelected) {
+            String datos = importFile.recibirArchivoEntrada();
+            txtPane.setText(datos);
+        }
+    }//GEN-LAST:event_cargarArchivoActionPerformed
 
     private void updateText(List<Token> listaVista) {
         StyledDocument doc = txtPane.getStyledDocument();

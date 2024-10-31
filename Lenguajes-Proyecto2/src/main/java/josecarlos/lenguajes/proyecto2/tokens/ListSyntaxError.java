@@ -1,4 +1,4 @@
-package josecarlos.lenguajes.proyecto2;
+package josecarlos.lenguajes.proyecto2.tokens;
 
 import java.util.ArrayList;
 import java.util.Arrays;
