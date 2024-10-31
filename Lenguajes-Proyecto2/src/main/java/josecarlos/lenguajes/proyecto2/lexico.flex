@@ -76,7 +76,7 @@ ESPACIOS = [\b\t\r\n ]  //Todos los espacios en blanco
 {N}+                    {addList(new Token(TokenType.ENTERO, yytext(), yyline, yycolumn));}
 {N}+"."{N}+             {addList(new Token(TokenType.DECIMAL, yytext(), yyline, yycolumn));}
 {FECHA}                 {addList(new Token(TokenType.FECHA, yytext(), yyline, yycolumn));}
-'(.)*'                  {addList(new Token(TokenType.CADENA, yytext(), yyline, yycolumn));}
+'[^']*'                 {addList(new Token(TokenType.CADENA, yytext(), yyline, yycolumn));}
 {ARITMETICOS}           {addList(new Token(TokenType.ARITMETICO, yytext(), yyline, yycolumn));}
 {SIGNOS}                {addList(new Token(TokenType.SIGNO, yytext(), yyline, yycolumn));}
 {RELACIONALES}          {addList(new Token(TokenType.RELACIONAL, yytext(), yyline, yycolumn));}

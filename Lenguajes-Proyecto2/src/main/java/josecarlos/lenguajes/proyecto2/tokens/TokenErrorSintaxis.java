@@ -30,6 +30,6 @@ public class TokenErrorSintaxis {
     }
     
     public String print(){
-        return "token: " + token.getValor() + ", tipo: " + token.getTipo().name() + ", linea: " + token.getLinea() + ", columna: " + token.getColumna() + " RAZON: " + reason;
+        return "<-----ERROR-----> token: " + token.getValor() + ", tipo: " + token.getTipo().name() + ", linea: " + token.getLinea() + ", columna: " + token.getColumna() + " RAZON: " + reason;
     }
 }

@@ -14,11 +14,12 @@ josecarlos/lenguajes/proyecto2/ddl/AlterType.class
 josecarlos/lenguajes/proyecto2/FramePrincipal$1.class
 josecarlos/lenguajes/proyecto2/sintactico/AnalizadorDML.class
 josecarlos/lenguajes/proyecto2/FramePrincipal$5.class
+josecarlos/lenguajes/proyecto2/tokens/ListSyntaxError.class
+josecarlos/lenguajes/proyecto2/Operaciones.class
 josecarlos/lenguajes/proyecto2/ddl/Alter.class
 josecarlos/lenguajes/proyecto2/tokens/TokenErrorSintaxis.class
 josecarlos/lenguajes/proyecto2/enums/PalabraReservada.class
 josecarlos/lenguajes/proyecto2/Lexico.class
-josecarlos/lenguajes/proyecto2/ListSyntaxError.class
 josecarlos/lenguajes/proyecto2/FramePrincipal$3.class
 josecarlos/lenguajes/proyecto2/FramePrincipal$2.class
 josecarlos/lenguajes/proyecto2/ddl/Tabla.class
@@ -27,4 +28,5 @@ josecarlos/lenguajes/proyecto2/sintactico/AnalizadorHelper.class
 josecarlos/lenguajes/proyecto2/tokens/Token.class
 josecarlos/lenguajes/proyecto2/ddl/Drop.class
 josecarlos/lenguajes/proyecto2/ddl/Llave.class
+josecarlos/lenguajes/proyecto2/dml/Insert.class
 josecarlos/lenguajes/proyecto2/frontend/LineNumber$1.class

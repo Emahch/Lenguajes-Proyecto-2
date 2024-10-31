@@ -242,6 +242,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         ExportImportFile importFile = new ExportImportFile();
         boolean isSelected = importFile.openFile();
         if (isSelected) {
+            this.selectedFile = importFile.getArchivoSeleccionado();
             String datos = importFile.recibirArchivoEntrada();
             txtPane.setText(datos);
         }

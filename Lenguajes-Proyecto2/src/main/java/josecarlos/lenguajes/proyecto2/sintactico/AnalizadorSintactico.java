@@ -1,6 +1,7 @@
 package josecarlos.lenguajes.proyecto2.sintactico;
 
 import java.util.List;
+import josecarlos.lenguajes.proyecto2.Operaciones;
 import josecarlos.lenguajes.proyecto2.tokens.ListSyntaxError;
 import josecarlos.lenguajes.proyecto2.enums.PalabraReservada;
 import josecarlos.lenguajes.proyecto2.tokens.Token;
@@ -19,6 +20,8 @@ public class AnalizadorSintactico {
     private int currentIndex;
     private ListSyntaxError tokensError;
     private AnalizadorDDL analizadorDDL;
+    private AnalizadorDML analizadorDML;
+    private Operaciones operaciones;
 
     public AnalizadorSintactico(List<Token> tokens) {
         this.currentIndex = 0;
@@ -26,8 +29,10 @@ public class AnalizadorSintactico {
             this.tokens = null;
             return;
         }
+        this.operaciones = new Operaciones();
         this.tokensError = new ListSyntaxError();
-        this.analizadorDDL = new AnalizadorDDL(tokensError);
+        this.analizadorDDL = new AnalizadorDDL(tokensError, operaciones);
+        this.analizadorDML = new AnalizadorDML(tokensError, operaciones);
         this.tokens = new Token[tokens.size()];
         for (int i = 0; i < tokens.size(); i++) {
             this.tokens[i] = tokens.get(i);
@@ -54,6 +59,10 @@ public class AnalizadorSintactico {
                     analizadorDDL.analizarAlter(getTokensBloque());
                 } else if (this.tokens[currentIndex].getValor().equals(PalabraReservada.DROP.name())) {
                     analizadorDDL.analizarDrop(getTokensBloque());
+                } else if (this.tokens[currentIndex].getValor().equals(PalabraReservada.INSERT.name())) {
+                    analizadorDML.analizarInsert(getTokensBloque());
+                } else if (this.tokens[currentIndex].getValor().equals(PalabraReservada.SELECT.name())) {
+                    analizadorDML.analizarSelect(getTokensBloque());
                 }
             }
         }
@@ -62,6 +71,7 @@ public class AnalizadorSintactico {
         }
         analizadorDDL.printDB();
         analizadorDDL.printTables();
+        analizadorDML.printInserts();
     }
 
     private Pila getTokensBloque() {

@@ -3,6 +3,7 @@ package josecarlos.lenguajes.proyecto2.sintactico;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import josecarlos.lenguajes.proyecto2.Operaciones;
 import josecarlos.lenguajes.proyecto2.tokens.ListSyntaxError;
 import josecarlos.lenguajes.proyecto2.ddl.Declaracion;
 import josecarlos.lenguajes.proyecto2.ddl.Llave;
@@ -29,14 +30,16 @@ public class AnalizadorDDL {
     private List<Drop> tablasBorradas;
     private ListSyntaxError tokensError;
     private AnalizadorHelper helper;
+    private Operaciones operaciones;
 
-    public AnalizadorDDL(ListSyntaxError tokensError) {
+    public AnalizadorDDL(ListSyntaxError tokensError, Operaciones operaciones) {
         this.DBCreadas = new ArrayList<>();
         this.tablasCreadas = new ArrayList<>();
         this.tablasModificadas = new ArrayList<>();
         this.tablasBorradas = new ArrayList<>();
         this.tokensError = tokensError;
         this.helper = new AnalizadorHelper();
+        this.operaciones = operaciones;
     }
 
     /* -------------------------------------- CREATE --------------------------------*/
@@ -67,7 +70,7 @@ public class AnalizadorDDL {
         token = pila.popFirst();
         if (helper.analizarFinBloque(token)) { // Detecta si es un ; o el fin del bloque
             this.DBCreadas.add(nameDB);
-            System.out.println("db creada: " + nameDB);
+            this.operaciones.sumCreate();
         } else {
             this.tokensError.addError(token, ";");
         }
@@ -103,6 +106,7 @@ public class AnalizadorDDL {
                     token = pila.popFirst();
                     if (helper.analizarFinBloque(token)) {
                         this.tablasCreadas.add(tabla);
+                        this.operaciones.sumCreate();
                     } else {
                         this.tokensError.addError(token, ";");
                     }
@@ -149,6 +153,7 @@ public class AnalizadorDDL {
             token = pila.popFirst();
             if (helper.analizarFinBloque(token)) {
                 this.tablasCreadas.add(tabla);
+                this.operaciones.sumCreate();
             } else {
                 this.tokensError.addError(token, ";");
             }
@@ -427,6 +432,7 @@ public class AnalizadorDDL {
         token = pila.popFirst();
         if (helper.analizarFinBloque(token)) {
             this.tablasModificadas.add(alter);
+            this.operaciones.sumAlter();
         } else {
             this.tokensError.addError(token, ";");
         }
