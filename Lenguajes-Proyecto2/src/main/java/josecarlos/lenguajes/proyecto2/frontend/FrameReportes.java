@@ -18,7 +18,6 @@ public class FrameReportes extends javax.swing.JFrame {
     public FrameReportes(String titulo) {
         initComponents();
         setTitle(titulo);
-        this.setAlwaysOnTop(true);
     }
     
     public void generarTabla(List<Token> tokens){
